@@ -3,12 +3,12 @@ import * as joi from 'joi';
 
 interface EnvVars {
   PORT: number;
-  NATS_SERVERS: string;
+  NATS_SERVERS: string[];
 }
 
 const envsSchema = joi.object({
   PORT: joi.number().required(),
-  NATS_SERVERS: joi.string().required()
+  NATS_SERVERS: joi.array().items( joi.string() ).required
 })
 .unknown(true); // le da la flexibilidad de tener mas definidas
 
