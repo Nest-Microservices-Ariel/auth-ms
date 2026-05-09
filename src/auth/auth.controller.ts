@@ -6,17 +6,17 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-    @MessagePattern('auth.register.user')
+    @MessagePattern({ cmd: 'auth.register.user'})
     async authRegister(@Payload() user: any) {
       return user;
     }
 
-    @MessagePattern('auth.login.user')
+    @MessagePattern({cmd: 'auth.login.user'})
     async authLogin(@Payload() user: any) {
       return user;
     }
 
-    @MessagePattern('auth.verify.user')
+    @MessagePattern({cmd: 'auth.verify.user'})
     async userVerify(@Payload() user: any) {
       return user;
     }

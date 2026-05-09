@@ -8,7 +8,7 @@ interface EnvVars {
 
 const envsSchema = joi.object({
   PORT: joi.number().required(),
-  NATS_SERVER: joi.string().required()
+  NATS_SERVERS: joi.string().required()
 })
 .unknown(true); // le da la flexibilidad de tener mas definidas
 
