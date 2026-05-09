@@ -17,8 +17,6 @@ const { error, value } = envsSchema.validate( {
   NATS_SERVERS: process.env.NATS_SERVERS?.split(',')
 });
 
-console.log(process.env)
-
 if (error) {
   throw new Error(`Config validation error ${error.message}`);
 }
