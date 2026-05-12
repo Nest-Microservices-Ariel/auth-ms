@@ -5,6 +5,7 @@ import { PrismaService } from 'src/config/services/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interface/jwt-payload.interface';
+import { envs } from 'src/config';
 
 @Injectable()
 export class AuthService {
@@ -77,6 +78,26 @@ export class AuthService {
 
     } catch (error) {
       this.getError(error);
+    }
+  }
+
+  async verifyToken(token: string) {
+    try {
+      const { sub, iat, exp, ...user } = this.jwtService.verify(token, {
+        secret: envs.jwt_secret
+      });
+
+      return {
+        user,
+        token: await this.singJWT(user)
+      }
+
+    } catch (error) {
+      console.log(error);
+      throw new RpcException({
+        status: HttpStatus.UNAUTHORIZED,
+        message: error
+      })
     }
   }
 
