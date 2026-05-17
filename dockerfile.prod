@@ -1,0 +1,37 @@
+# Dependencies
+FROM node:24-alpine3.22 AS deps
+WORKDIR /usr/src/app
+COPY package.json ./
+COPY yarn.lock ./
+RUN yarn install
+
+# Builder
+FROM node:24-alpine3.22 AS build
+WORKDIR /usr/src/app
+
+COPY --from=deps /usr/src/app/node_modules ./node_modules
+COPY . .
+
+# This arg is because prisma need a url to build
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+
+#need build first prisma to use on build of app
+RUN npx prisma generate
+
+RUN yarn build
+# RUN ls -la dist
+# RUN find dist -maxdepth 3 -type f
+RUN yarn install --frozen-lockfile --production && yarn cache clean
+
+#Prod
+FROM node:24-alpine3.22 AS prod
+WORKDIR /usr/src/app
+COPY --from=build /usr/src/app/node_modules ./node_modules
+COPY --from=build /usr/src/app/dist ./dist
+COPY --from=build /usr/src/app/generated ./generated
+ENV NODE_ENV=production
+USER node
+EXPOSE 3000
+CMD [ "node", "dist/src/main.js" ]
+
