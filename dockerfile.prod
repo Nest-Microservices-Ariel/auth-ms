@@ -13,11 +13,10 @@ COPY --from=deps /usr/src/app/node_modules ./node_modules
 COPY . .
 
 # This arg is because prisma need a url to build
-ARG DATABASE_URL
-ENV DATABASE_URL=$DATABASE_URL
+ARG DATABASE_URL=mongodb+srv://dummy:dummy_pass@your_cluster
 
 #need build first prisma to use on build of app
-RUN npx prisma generate
+RUN DATABASE_URL=$DATABASE_URL npx prisma generate
 
 RUN yarn build
 # RUN ls -la dist
