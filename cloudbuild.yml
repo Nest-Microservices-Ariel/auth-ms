@@ -7,7 +7,7 @@ steps:
   args:
     - -c
     - |
-      docker build -t europe-southwest1-docker.pkg.dev/product-launcher-498816/image-registry/auth-ms -f dockerfile.prod --platform=linux/amd64 --build-arg ORDERS_DATABASE_URL=$$DATABASE_URL .
+      docker build -t europe-southwest1-docker.pkg.dev/product-launcher-498816/image-registry/auth-ms -f dockerfile.prod --platform=linux/amd64 --build-arg DATABASE_URL=$$DATABASE_URL .
   secretEnv: ['DATABASE_URL']
 
 - name: 'gcr.io/cloud-builders/docker'
